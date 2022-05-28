@@ -1,6 +1,5 @@
 //jshint esversion:6
 
-
 require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -118,10 +117,11 @@ app.get("/secrets", (req, res) => {
     })
 });
 
-app.get("/register", (req, res) => {
+app.route("/register")
+.get((req, res) => {
     res.render("register");
 })
-.post("/register", (req, res) => {
+.post((req, res) => {
     
     User.register({username: req.body.username}, req.body.password, (err, user) => {
         if (err) {
@@ -135,10 +135,11 @@ app.get("/register", (req, res) => {
     });
 });
 
-app.get("/login", (req, res) => {
+app.route("/login")
+.get((req, res) => {
     res.render("login");
 })
-.post("/login", (req, res) => {
+.post((req, res) => {
     const user = new User({
         username: req.body.username,
         password: req.body.password
@@ -164,18 +165,16 @@ app.get("/logout", (req, res) => {
     res.redirect("/");
 });
 
-app.get("/submit", (req, res) => {
+app.route("/submit")
+.get((req, res) => {
     if (req.isAuthenticated()) {
         res.render("submit");
     } else {
         res.redirect("/login");
     }
-});
-
-app.post("/submit", (req, res) => {
+})
+.post((req, res) => {
     const submittedSecret = req.body.secret;
-
-    console.log(req.user);
 
     User.findById(req.user.id, (err, foundUser) => {
         if (err) {
